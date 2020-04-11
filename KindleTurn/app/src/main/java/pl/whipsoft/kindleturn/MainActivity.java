@@ -56,7 +56,10 @@ public class MainActivity extends Activity {
 //			System.out.println(e);
 //		}
 		serviceInt = new Intent(this, KindleTurnService.class);
-		startService(serviceInt);
+		serviceInt.putExtra("ip", ip);
+		serviceInt.putExtra("username", username);
+        serviceInt.putExtra("password", password);
+        startService(serviceInt);
 
 		if (ip.length() > 0 && username.length() > 0 && password.length() > 0) {
 			SendCommandTask.setPrefs(ip, username, password);

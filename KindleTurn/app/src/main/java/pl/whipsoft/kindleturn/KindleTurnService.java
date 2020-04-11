@@ -18,21 +18,23 @@ import java.io.InputStream;
 
 public class KindleTurnService extends Service {
     private MediaSessionCompat mediaSession;
-
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public int onStartCommand (Intent intent, int flags, int startId) {
+        username = intent.getStringExtra("username");
+        ip = intent.getStringExtra("ip");
+        password = intent.getStringExtra("password");
+        System.out.println("started service");
 
         JSch jsch = new JSch();
         try{
-            session = jsch.getSession("root", "192.168.0.48", 22);
+            session = jsch.getSession(username, ip, 22);
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
 
             // If two machines have SSH passwordless logins setup, the following
             // line is not needed:
-            session.setPassword("qwerasdf1");
+            session.setPassword(password);
             session.connect();
         } catch (Exception e) {
             System.out.println(e);
@@ -137,6 +139,13 @@ public class KindleTurnService extends Service {
 
         mediaSession.setPlaybackToRemote(myVolumeProvider);
         mediaSession.setActive(true);
+        return Service.START_NOT_STICKY;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        System.out.println("created service");
     }
 
 
@@ -152,4 +161,7 @@ public class KindleTurnService extends Service {
     }
 
     private Session session;
+    private String ip;
+    private String username;
+    private String password;
 }
