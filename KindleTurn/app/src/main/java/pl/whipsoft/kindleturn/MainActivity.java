@@ -1,8 +1,10 @@
 package pl.whipsoft.kindleturn;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -71,15 +73,18 @@ public class MainActivity extends Activity {
 
 	}
 
-//	@Override
-//	public boolean dispatchKeyEvent(KeyEvent event) {
-//		int action = event.getAction();
-//		int keyCode = event.getKeyCode();
-//		Log.d("SWITCH", "keycode= " + keyCode);
-//
-//		switch (keyCode) {
-//		case KeyEvent.KEYCODE_VOLUME_UP:
-//			if (action == KeyEvent.ACTION_UP) {
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent event) {
+		int action = event.getAction();
+		int keyCode = event.getKeyCode();
+		Log.d("SWITCH", "keycode= " + keyCode);
+
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_VOLUME_UP:
+			if (action == KeyEvent.ACTION_UP) {
+                Log.i("KindleTurn", "KEYCODE_VOLUME_UP");
+                AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
 //				Log.i("KindleTurn", "NEXT");
 //				try {
 //
@@ -117,53 +122,19 @@ public class MainActivity extends Activity {
 //				} catch (Exception e) {
 //					System.out.println(e);
 //				}
-//			}
-//			return true;
-//		case KeyEvent.KEYCODE_VOLUME_DOWN:
-//			if (action == KeyEvent.ACTION_UP) {
-//				Log.i("KindleTurn", "NEXT");
-//				try {
-//
-//					Channel channel = session.openChannel("exec");
-//					((ChannelExec) channel).setCommand(COMMAND.PREVIOUS_PAGE.getLinux_command());
-//
-//					// channel.setInputStream(System.in);
-//					//channel.setInputStream(null);
-//
-//					((ChannelExec) channel).setErrStream(System.err);
-//
-//					InputStream in = channel.getInputStream();
-//
-//					channel.connect();
-//					byte[] tmp = new byte[1024];
-//					while (true) {
-//						while (in.available() > 0) {
-//							int i = in.read(tmp, 0, 1024);
-//							if (i < 0)
-//								break;
-//							System.out.print(new String(tmp, 0, i));
-//						}
-//						if (channel.isClosed()) {
-//							System.out.println("exit-status: "
-//									+ channel.getExitStatus());
-//							break;
-//						}
-//						try {
-//							Thread.sleep(500);
-//						} catch (Exception ee) {
-//							ee.printStackTrace();
-//						}
-//					}
-//					channel.disconnect();
-//				} catch (Exception e) {
-//					System.out.println(e);
-//				}
-//			}
-//			return true;
-//		default:
-//			return super.dispatchKeyEvent(event);
-//		}
-//	}
+			}
+			return true;
+		case KeyEvent.KEYCODE_ENTER:
+			if (action == KeyEvent.ACTION_UP) {
+				Log.i("KindleTurn", "KEYCODE_ENTER");
+                AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+            }
+			return true;
+		default:
+			return super.dispatchKeyEvent(event);
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
